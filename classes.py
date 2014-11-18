@@ -3,14 +3,13 @@ class Vehicle:
     """docstring for Vehicle"""
 
     def __init__(self, id):
-        super(Vehicle, self).__init__()
         self.total_battery_life = 10 * 60
         self.battery_life = self.total_battery_life
         self.total_charging_time = 10 * 60
         self.charge_ratio = 1
         self.id = id
         self.on_charge = False
-        self.operating = False
+        self.operating = True
 
     def operate(self, timestep):
         self.on_charge = False
@@ -34,13 +33,15 @@ class Vehicle:
         self.battery_life += timestep * \
             (self.total_battery_life / self.total_charging_time)
 
-    def getChargingRatio(self):
+    def getChargeRatio(self):
         return self.charge_ratio
 
     def goForCharge(self):
-        if self.charge_ratio() < .05:
+        print self.getChargeRatio()
+        if self.getChargeRatio() < .5:
             self.on_charge = True
             self.operate = False
+            print "Vehicle " + str(self.id) + " went for charging"
 
 
 class Charger:
@@ -48,7 +49,6 @@ class Charger:
     """docstring for Charger"""
 
     def __init__(self, id):
-        super(Charger, self).__init__()
         self.id = id
         self.queue = []
 
@@ -64,9 +64,11 @@ class Charger:
             del self.queue[0]
 
     def deploy(self):
-        if self.queue(0).charge_ratio() > .9:
-            self.queue(0).on_charge = False
-            self.queue(0).operating = True
+        if self.queue:
+            if self.queue[0].getChargeRatio() > .9:
+                self.queue[0].on_charge = False
+                self.queue[0].operating = True
+                print "Charger " + self.id + " deployed vehicle " + str(self.queue[0].id)
 
 
 class Simulation:
@@ -79,22 +81,27 @@ class Simulation:
 
     def addVehicle(self, this_many=1):
         for time in range(0, this_many):
-            new_id = len(Simulation).vehicles
+            new_id = len(self.vehicles)
             self.vehicles.append(Vehicle(new_id))
+            print "Vehicle " + str(new_id) + " was added"
 
     def addCharger(self, this_many=1):
         for time in range(0, this_many):
-            new_id = len(Simulation).chargers
+            new_id = len(self.chargers)
             self.chargers.append(Charger(new_id))
+            print "Charger " + str(new_id) + " was added"
 
     def sim(self, timestep):
+        print "Running simulation for extra " + str(timestep) + " minutes"
         for vehicle in self.vehicles:
             vehicle.goForCharge()
             if vehicle.operating:
                 vehicle.operate(timestep)
+                print "Vehicle" + str(vehicle.id) + " operated for" + str(timestep) + "minutes"
             if vehicle.on_charge:
                 vehicle.charge(timestep)
 
         for charger in self.chargers:
             charger.deploy()
-            charger.power()
+            charger.power(timestep)
+            print "Charger " + str(charger.id) + " charged for " + str(timestep) + " minutes"
