@@ -152,19 +152,22 @@ class Environment:
 
     def explored(self, vehicle):
         monitor_length = int(3 * vehicle.var / self.resolution)
+        last_length_cell = self.length/self.resolution+1
+        last_width_cell = self.width/self.resolution+1
+        mid_length_cell=self.length / self.resolution / 2 
+        mid_width_cell=self.width / self.resolution / 2
+        i=0
         for index in range(0, size(vehicle.x)):
-            x_index = int(self.length / self.resolution / 2 +
-                          round(vehicle.x[index] / self.resolution))  # TODO round all
-            # print "debug: ", x_index
-            y_index = int(self.width / self.resolution / 2 +
-                          round(vehicle.y[index] / self.resolution))
-
-            monitor_x_range = range(int(x_index - monitor_length), int(x_index + monitor_length))
-            monitor_y_range = range(int(y_index - monitor_length), int(y_index + monitor_length))
+            x_position_index = int(mid_length_cell+round(vehicle.x[index] / self.resolution))  # TODO round all
+            # print "debug: ", x_position_index
+            y_position_index = int(mid_width_cell +round(vehicle.y[index] / self.resolution))
+            monitor_x_range = range(int(max([x_position_index - monitor_length , 0])), int(min([x_position_index + monitor_length,last_length_cell])))
+            monitor_y_range = range(int(max([y_position_index - monitor_length , 0])), int(min([y_position_index + monitor_length,last_width_cell])))
             for x in monitor_x_range:
                 for y in monitor_y_range:
+                    i+=1
                     distance_square = (
-                        self.resolution * (x - x_index)) ** 2 + (self.resolution * (y - y_index)) ** 2
+                        self.resolution * (x - x_position_index)) ** 2 + (self.resolution * (y - y_position_index)) ** 2
                     # print distance_square
                     num = exp(-distance_square / (2 * vehicle.var ** 2))
                     denum = vehicle.var * sqrt(2 * pi)
@@ -172,6 +175,7 @@ class Environment:
                     self.explored_probability[x][y] = min([1 - temp_probability / vehicle.max_probability, self.explored_probability[x][y]])
                     if self.explored_probability[x][y] < 0:
                         self.explored_probability[x][y] = 0
+        print "This many times:",i
                 # print self.explored_probability
         # grid = numpy.arrange(vehicle.x)
         # self.probability[vehicle.x][vehicle.y] = 0

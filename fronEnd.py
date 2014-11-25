@@ -13,9 +13,9 @@ env = classes.Environment()
 env.visualize()
 env.calculateCost()
 agent = classes.Vehicle(1)
-start_time=time.time()
+start_time = time.time()
 env.explored(agent)
-print "Time elapsed is:",time.time()-start_time
+print "Time elapsed is:", time.time() - start_time
 env.combine()
 env.calculateCost()
 env.visualize()
