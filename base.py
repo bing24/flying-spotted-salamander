@@ -22,6 +22,7 @@ y=x
 xx, yy = meshgrid(x, y, sparse=True)
 var=round(length/3);
 z=exp(-(xx**2+yy**2)/(2*var**2))/(sqrt(2*pi)*var)
+size(z)
 h = cset = ax.contour(x,y,z, cmap=cm.cool)
 surf = ax.plot_wireframe(xx, yy, z, rstride=1, cstride=1, cmap=cm.cool,
         linewidth=0.05, antialiased=True)
