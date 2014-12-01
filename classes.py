@@ -18,10 +18,29 @@ class Vehicle:
         self.id = id
         self.on_charge = False
         self.operating = True
-        self.x = [5, 60, 40]
-        self.y = [3, 20, 20]
+        self.x = [0]
+        self.y = [0]
         self.var = 10
         self.max_probability = .8 / (sqrt(2 * pi) * self.var)
+
+    def theta_r_to_path(self,coef,length=100):
+        theta=0
+        r=0
+        step=self.var/2
+        for i in range(0,length):
+            theta+=numpy.arctan2(step,r)
+            r=coef*theta
+            self.x.append(r*cos(theta))
+            self.y.append(r*sin(theta))
+        fig = plt.figure()
+        # axes = fig.gca(projection='2d')
+        # axes = fig.add_axes([0.1, 0.1, 0.8, 0.8]) # left, bottom, width, height (range 0 to 1)
+        plt.plot(self.x,self.y)
+        # axes.set_xlabel('x')
+        # axes.set_ylabel('y')
+        # axes.set_title('title');
+        plt.show()
+
 
     def operate(self, timestep):
         self.on_charge = False
@@ -146,7 +165,7 @@ class Environment:
         xmesh, ymesh = numpy.meshgrid(self.xx, self.yy, sparse=True)
         # ax.auto_scale_xyz(
         #     [-length, length], [-length, 3 * length], [0, 2 * length])
-        surf = ax.plot_wireframe(self.xmesh, self.ymesh, self.probability, rstride=20, cstride=20, cmap=cm.cool,
+        surf = ax.plot_wireframe(self.xmesh, self.ymesh, self.probability, rstride=20, cstride=20, cmap=cm.coolwarm,
                                  linewidth=0.1, antialiased=True)
         plt.show()
 
