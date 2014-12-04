@@ -2,7 +2,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import animation
 print "######################## 2D simulation ################"
-print "boner"
 
 # initialization function: plot the background of each frame
 
