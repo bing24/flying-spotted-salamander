@@ -6,8 +6,8 @@ print "######################## 2D simulation ################"
 # initialization function: plot the background of each frame
 class IVER(object):
     def __init__(self):
-        self.speed=5000.0
-        self.operation_time=6.0
+        self.speed=4100.0
+        self.operation_time=5.0
         self.operation_distance=self.operation_time*self.speed
         self.battery=1.0
         self.start_x=0.0
@@ -18,7 +18,7 @@ class IVER(object):
         self.history_y=[]
         self.recharging=False
         self.motion_width=4000.0
-        self.motion_forward_step=150.0
+        self.motion_forward_step=380.0
         self.forward=False
         self.right=False
         self.recharge_time=3.5
@@ -104,13 +104,13 @@ class IVER(object):
 
 class GLIDER(object):
     def __init__(self,x=0,y=0):
-        self.speed=100.0
+        self.speed=280.0
         self.battery=1.0
         self.deploy_time=0
         self.travel_time=0
         self.stop_time=0
-        self.position_x=1000
-        self.position_y=2000
+        self.position_x=0
+        self.position_y=0
         self.history_x=[]
         self.history_y=[]
         self.target_x=x
@@ -176,7 +176,7 @@ class ANIMATION(object):
     def animate(self,i):
 
         # Setup
-        time_step=.1
+        time_step=.005
         time=i*time_step+self.simulation_start_time
         time_text.set_text('time = %.1f hr' %time )
         gliders_position_x=[]
@@ -230,15 +230,18 @@ anime.addIVER(1)
 anime.addGlider(4)
 
 
-fig = plt.figure(num=None, figsize=(20, 4), dpi=80)
-ax = plt.axes(xlim=(-100, 8000), ylim=(-500, anime.ivers[0].motion_width*1.2))
-
+fig = plt.figure(num=None, figsize=(20, 10), dpi=80)
+ax = plt.axes(xlim=(-200, 9000), ylim=(-200, anime.ivers[0].motion_width*1.2))
+ax.xaxis.set_tick_params(width=5)
+ax.yaxis.set_tick_params(width=5)
 iver, = ax.plot([], [],'ko', lw=2,markersize=10)
 gliders, = ax.plot([], [],'ro', lw=2,marker='s')
-iver_trajectory =[ax.plot([], [],'k', lw=1)[0] for m in range(len(anime.ivers))]
-glider_trajectory =[ax.plot([], [],'r', lw=1)[0] for n in range(len(anime.gliders))]
-time_text = ax.text(0.02, 0.95, '', transform=ax.transAxes)
-state_text = ax.text(0.02, 0.9, '', transform=ax.transAxes)
+iver_trajectory =[ax.plot([], [],'k', lw=3)[0] for m in range(len(anime.ivers))]
+glider_trajectory =[ax.plot([], [],'r', lw=3)[0] for n in range(len(anime.gliders))]
+time_text = ax.text(0.02, 0.95, '', transform=ax.transAxes,fontsize=20)
+state_text = ax.text(0.02, 0.9, '', transform=ax.transAxes,fontsize=20)
+plt.tick_params(axis='both', labelsize=20) 
+plt.setp( ax.yaxis.get_majorticklabels(), rotation=90 )
 # call the animator.  blit=True means only re-draw the parts that have changed.
 anim = animation.FuncAnimation(fig, anime.animate, init_func=anime.setup,
                                frames=20000,interval=2,repeat=False)
