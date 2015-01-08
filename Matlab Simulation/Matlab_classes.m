@@ -20,6 +20,7 @@ classdef ChargingRobot
 	end
 
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 classdef OperatingRobot
 
@@ -44,13 +45,27 @@ classdef OperatingRobot
 	end
 
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 classdef Environment
 
 	properties
+		time_step
+		list_of_operatoring_robots
+		list_of_charging_robots
 	end
 
 	methods
+		function obj=Environment()
+		end
+		function AddOperatingRobots(obj, number_of_robots_to_add)
+			for i=1:number_of_robots_to_add
+			end
+		end
+		function AddChargingRobots(obj, number_of_robots_to_add)
+			for i=1:number_of_robots_to_add
+			end
+		end
 	end
 
 end
