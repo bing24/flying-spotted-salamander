@@ -9,7 +9,7 @@ classdef OperatingRobot
 		trajectory_x
 		trajectory_y
 		trajectory_power
-		max_speed
+		speed
 		power_level
 		battery_drain_rate
 		recharge_window_max_level
@@ -40,14 +40,15 @@ classdef OperatingRobot
 			normalization_coef=sum(sqrt(diff(x_array).^2+diff(y_array).^2));
 			obj.trajectory_x=travel_length/normalization_coef*x_array;
 			obj.trajectory_y=travel_length/normalization_coef*y_array;
+			trajectory_power=1;
+			for i=2:number_of_trajectory_steps
+				distance=sqrt((obj.trajectory_y(i)-obj.trajectory_y(i-1))+(obj.trajectory_x(i)-obj.trajectory_x(i-1)));
+				trajectory_power(i)=trajectory_power(i-1)-(battery_drain_rate*distance/speed);
+			end
 		end
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		function plotTrajectory(obj)
 			plot(trajectory_x,trajectory_y)
-		end
-		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		function configWindow(obj, discrete_step)
-
 		end
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		function move(obj, time_step)
