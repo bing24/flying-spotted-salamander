@@ -24,7 +24,8 @@ classdef OperatingRobot
 			obj.id=ID_number
 		end
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		function setTrajectory(obj)
+		function setTrajectory(obj,setmap)
+		     if (strcmp(setmap,'random'))
 			travel_length=2*pi;
 			number_of_trajectory_steps=1000;
 			number_of_divergences=15;
@@ -40,10 +41,24 @@ classdef OperatingRobot
 			normalization_coef=sum(sqrt(diff(x_array).^2+diff(y_array).^2));
 			obj.trajectory_x=travel_length/normalization_coef*x_array;
 			obj.trajectory_y=travel_length/normalization_coef*y_array;
+			
+			indexes = floor(length(trajectory_x)*rand); %Generate random initial position and current position
+	                initial_x=trajectory_x(indexes);
+	                initial_y=trajectory_y(indexes);
+	                indexes = floor(length(trajectory_x)*rand);
+	                current_x=trajectory_x(indexes);
+	                current_y=trajectory_y(indexes);
+	              else 
+	                load setmap
+	              end
 		end
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		function plotTrajectory(obj)
-			plot(trajectory_x,trajectory_y)
+			plot(trajectory_x,trajectory_y,'.')
+			hold on
+		        plot(initial_x,initial_y,'>')
+		        plot(current_x,current_y,'o')
+		        hold off
 		end
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		function configWindow(obj, discrete_step)
